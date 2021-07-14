@@ -57,20 +57,32 @@ namespace API.Controllers
             return JsonConvert.DeserializeObject<CriacaoPedidoResponseModel>(response.Content);
         }
 
+        #region Novo Action de callback para teste
         [HttpPost]
-        public CriacaoPedidoCallbackModel CreateOrderCallback([FromBody] CriacaoPedidoCallbackModel pedidoCallback)
+        public ActionResult CreateOrderCallback([FromBody] object pedidoCallback)
         {
-            _logger.LogInformation($"POST | CreateOrderCallback ->value: { JsonConvert.SerializeObject(pedidoCallback)}");
-            // sinalizar SLM do retorno
-            var conn = PedidosHub.Connections.GetConnectionIdSlm(pedidoCallback.attributes.customPayload.isFrom);
-
-            if (!string.IsNullOrEmpty(conn))
-                _hubContext.Clients.Client(conn).ReceiveCreateOrderCallback(pedidoCallback);
-            else
-                _logger.LogInformation($"POST | CreateOrderCallback -> cliente não encontrado");
-
-            return pedidoCallback;
+            _logger.LogInformation($"POST | CreateOrderCallback -> object value: {pedidoCallback}");
+            return Ok(pedidoCallback);
         }
+        #endregion
+
+        #region  Action Original de Callback
+
+        //[HttpPost]
+        //public CriacaoPedidoCallbackModel CreateOrderCallback([FromBody] CriacaoPedidoCallbackModel pedidoCallback)
+        //{
+        //    _logger.LogInformation($"POST | CreateOrderCallback ->value: { JsonConvert.SerializeObject(pedidoCallback)}");
+        //    // sinalizar SLM do retorno
+        //    var conn = PedidosHub.Connections.GetConnectionIdSlm(pedidoCallback.attributes.customPayload.isFrom);
+
+        //    if (!string.IsNullOrEmpty(conn))
+        //        _hubContext.Clients.Client(conn).ReceiveCreateOrderCallback(pedidoCallback);
+        //    else
+        //        _logger.LogInformation($"POST | CreateOrderCallback -> cliente não encontrado");
+
+        //    return pedidoCallback;
+        //} 
+        #endregion
 
 
         //private bool CaptureTransaction(UrlCallbackResponseModel transaction)
